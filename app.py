@@ -15,16 +15,16 @@ if col2.button("العربية"):
 
 language = st.session_state.language
 
+tts_lang = "en"  # Always use English for speech
+
 if language == "العربية":
     st.title("تحويل النص إلى كلام")
     text = st.text_area("أدخل النص لتحويله إلى كلام:")
     button_label = "تحويل إلى كلام"
-    tts_lang = "ar"
 else:
     st.title("Text to Speech with gTTS")
     text = st.text_area("Enter text to convert to speech:")
     button_label = "Convert to Speech"
-    tts_lang = "en"
 
 # Button clicked
 if st.button(button_label):
