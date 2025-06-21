@@ -10,7 +10,7 @@ if language == "العربية":
 else:
     st.title("Text to Speech with ElevenLabs")
     text = st.text_area("Enter text to convert to speech:")
-    button_label = "Convert to Speech"
+    button_label = "Convert  Speech"
 
 api_key = st.secrets["elevenlabs"]["api_key"]
 voice_id = st.secrets["elevenlabs"]["voice_id"]
