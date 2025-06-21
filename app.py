@@ -3,7 +3,7 @@ from gtts import gTTS
 import tempfile
 import os
 
-# Use session state for language selection
+# Language selection using session state
 if "language" not in st.session_state:
     st.session_state.language = "English"
 
@@ -15,7 +15,8 @@ if col2.button("العربية"):
 
 language = st.session_state.language
 
-tts_lang = "en"
+# Set language for gTTS
+tts_lang = "ar" if language == "العربية" else "en"
 
 if language == "العربية":
     st.title("تحويل النص إلى كلام")
@@ -26,20 +27,25 @@ else:
     text = st.text_area("Enter text to convert to speech:")
     button_label = "Convert to Speech"
 
-# Button clicked
 if st.button(button_label):
     if not text.strip():
         st.error("Please enter some text." if language == "English" else "من فضلك أدخل نصًا.")
     else:
         try:
             tts = gTTS(text, lang=tts_lang, slow=False)
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
+            # Use temporary file with suffix .mp3
+            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as fp:
                 temp_path = fp.name
                 tts.save(temp_path)
-                audio_file = open(temp_path, "rb")
+
+            # Read audio file after saving and close it before playback
+            with open(temp_path, "rb") as audio_file:
                 audio_bytes = audio_file.read()
-                st.audio(audio_bytes, format="audio/mp3")
-                audio_file.close()
-                os.remove(temp_path)
+
+            st.audio(audio_bytes, format="audio/mp3")
+
+            # Delete temp file after playback
+            os.remove(temp_path)
+
         except Exception as e:
             st.error(f"An error occurred: {e}")
