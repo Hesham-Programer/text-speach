@@ -22,7 +22,7 @@ if language == "العربية":
     text = st.text_area("أدخل النص لتحويله إلى كلام:")
     button_label = "تحويل إلى كلام"
 else:
-    st.title("Text to Speech with gTTS")
+    st.title("Text to Speech")
     text = st.text_area("Enter text to convert to speech:")
     button_label = "Convert to Speech"
 
