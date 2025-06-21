@@ -3,41 +3,24 @@ from gtts import gTTS
 import tempfile
 import os
 
-# Language selector
-language = st.sidebar.selectbox("Select Language / اختر اللغة", ["English", "العربية"])
+# Language selector as buttons
+col1, col2 = st.columns(2)
+language = "English"
+if col1.button("English"):
+    language = "English"
+if col2.button("العربية"):
+    language = "العربية"
 
 if language == "العربية":
-    st.title("تحويل النص إلى كلام باستخدام gTTS")
+    st.title("تحويل النص إلى كلام")
     text = st.text_area("أدخل النص لتحويله إلى كلام:")
     button_label = "تحويل إلى كلام"
     tts_lang = "ar"
-    dark_mode_label = "الوضع الداكن"
 else:
     st.title("Text to Speech with gTTS")
     text = st.text_area("Enter text to convert to speech:")
     button_label = "Convert to Speech"
     tts_lang = "en"
-    dark_mode_label = "Dark Mode"
-
-# Dark mode toggle
-dark_mode = st.sidebar.checkbox(dark_mode_label)
-
-if dark_mode:
-    st.markdown(
-        """
-        <style>
-        body, .stApp, .css-18e3th9, .css-1d391kg {
-            background-color: #181818 !important;
-            color: #f1f1f1 !important;
-        }
-        .stTextInput > div > div > input, .stTextArea > div > textarea {
-            background-color: #222 !important;
-            color: #f1f1f1 !important;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
 
 # Button clicked
 if st.button(button_label):
