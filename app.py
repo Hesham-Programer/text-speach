@@ -3,13 +3,17 @@ from gtts import gTTS
 import tempfile
 import os
 
-# Language selector as buttons
+# Use session state for language selection
+if "language" not in st.session_state:
+    st.session_state.language = "English"
+
 col1, col2 = st.columns(2)
-language = "English"
 if col1.button("English"):
-    language = "English"
+    st.session_state.language = "English"
 if col2.button("العربية"):
-    language = "العربية"
+    st.session_state.language = "العربية"
+
+language = st.session_state.language
 
 if language == "العربية":
     st.title("تحويل النص إلى كلام")
@@ -28,7 +32,7 @@ if st.button(button_label):
         st.error("Please enter some text." if language == "English" else "من فضلك أدخل نصًا.")
     else:
         try:
-            tts = gTTS(text, lang=tts_lang)
+            tts = gTTS(text, lang=tts_lang, slow=False)
             with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
                 temp_path = fp.name
                 tts.save(temp_path)
