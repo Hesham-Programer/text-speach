@@ -3,7 +3,6 @@ from gtts import gTTS
 import tempfile
 import os
 
-# Language selection using session state
 if "language" not in st.session_state:
     st.session_state.language = "English"
 
@@ -14,8 +13,6 @@ if col2.button("العربية"):
     st.session_state.language = "العربية"
 
 language = st.session_state.language
-
-# Set language for gTTS
 tts_lang = "en"
 
 if language == "العربية":
@@ -32,20 +29,16 @@ if st.button(button_label):
         st.error("Please enter some text." if language == "English" else "من فضلك أدخل نصًا.")
     else:
         try:
-            tts = gTTS(text, lang=tts_lang, slow=False)
-            # Use temporary file with suffix .mp3
-            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as fp:
-                temp_path = fp.name
+            tts = gTTS(text=text, lang=tts_lang, slow=False)
+            # Use NamedTemporaryFile but close before reading, and use delete=False to avoid issues
+            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tmp_file:
+                temp_path = tmp_file.name
                 tts.save(temp_path)
 
-            # Read audio file after saving and close it before playback
             with open(temp_path, "rb") as audio_file:
                 audio_bytes = audio_file.read()
 
             st.audio(audio_bytes, format="audio/mp3")
-
-            # Delete temp file after playback
             os.remove(temp_path)
-
         except Exception as e:
             st.error(f"An error occurred: {e}")
