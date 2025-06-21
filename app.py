@@ -16,7 +16,7 @@ if col2.button("العربية"):
 language = st.session_state.language
 
 # Set language for gTTS
-tts_lang = "ar" if language == "العربية" else "en"
+tts_lang = "en"
 
 if language == "العربية":
     st.title("تحويل النص إلى كلام")
