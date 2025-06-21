@@ -1,30 +1,27 @@
 import streamlit as st
-import requests
+from gtts import gTTS
+import tempfile
+import os
 
+# Language selector
 language = st.sidebar.selectbox("Select Language / اختر اللغة", ["English", "العربية"])
 
 if language == "العربية":
-    st.title("تحويل النص إلى كلام باستخدام ElevenLabs")
+    st.title("تحويل النص إلى كلام باستخدام gTTS")
     text = st.text_area("أدخل النص لتحويله إلى كلام:")
     button_label = "تحويل إلى كلام"
-else:
-    st.title("Text to Speech with ElevenLabs")
-    text = st.text_area("Enter text to convert to speech:")
-    button_label = "Convert  Speech"
-
-api_key = st.secrets["elevenlabs"]["api_key"]
-voice_id = st.secrets["elevenlabs"]["voice_id"]
-
-
-# Add dark mode toggle
-if language == "العربية":
+    tts_lang = "ar"
     dark_mode_label = "الوضع الداكن"
 else:
+    st.title("Text to Speech with gTTS")
+    text = st.text_area("Enter text to convert to speech:")
+    button_label = "Convert to Speech"
+    tts_lang = "en"
     dark_mode_label = "Dark Mode"
 
+# Dark mode toggle
 dark_mode = st.sidebar.checkbox(dark_mode_label)
 
-# Apply dark mode styling
 if dark_mode:
     st.markdown(
         """
@@ -42,27 +39,20 @@ if dark_mode:
         unsafe_allow_html=True
     )
 
+# Button clicked
 if st.button(button_label):
-    if not api_key or not text:
-        if language == "العربية":
-            st.error("مطلوب مفتاح API والنص.")
-        else:
-            st.error("API key and text are required.")
+    if not text.strip():
+        st.error("Please enter some text." if language == "English" else "من فضلك أدخل نصًا.")
     else:
-        headers = {
-            "xi-api-key": api_key,
-            "Content-Type": "application/json"
-        }
-        data = {
-            "text": text,
-            "voice_settings": {"stability": 0.5, "similarity_boost": 0.5}
-        }
-        url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
-        response = requests.post(url, headers=headers, json=data)
-        if response.status_code == 200:
-            st.audio(response.content, format="audio/mp3")
-        else:
-            if language == "العربية":
-                st.error(f"خطأ: {response.status_code} - {response.text}")
-            else:
-                st.error(f"Error: {response.status_code} - {response.text}")
+        try:
+            tts = gTTS(text, lang=tts_lang)
+            with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as fp:
+                temp_path = fp.name
+                tts.save(temp_path)
+                audio_file = open(temp_path, "rb")
+                audio_bytes = audio_file.read()
+                st.audio(audio_bytes, format="audio/mp3")
+                audio_file.close()
+                os.remove(temp_path)
+        except Exception as e:
+            st.error(f"An error occurred: {e}")
