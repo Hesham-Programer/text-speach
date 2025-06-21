@@ -12,8 +12,9 @@ else:
     text = st.text_area("Enter text to convert to speech:")
     button_label = "Convert to Speech"
 
-api_key = "sk_a541530146d9085657dc66ee8b54315f8d45eb934ab530e9"
-voice_id = "TX3LPaxmHKxFdv7VOQHJ"
+api_key = st.secrets["elevenlabs"]["api_key"]
+voice_id = st.secrets["elevenlabs"]["voice_id"]
+
 
 # Add dark mode toggle
 if language == "العربية":
