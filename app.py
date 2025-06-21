@@ -15,7 +15,7 @@ if col2.button("العربية"):
 
 language = st.session_state.language
 
-tts_lang = "en"  # Always use English for speech
+tts_lang = "en"
 
 if language == "العربية":
     st.title("تحويل النص إلى كلام")
